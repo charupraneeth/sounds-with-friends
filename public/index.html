@@ -6,9 +6,21 @@
       body {
         margin: 0;
         padding: 0;
+        position: relative;
       }
       main {
-        margin: 1rem;
+        padding: 1rem;
+      }
+      .cover {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        background: black;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
       }
       button {
         padding: 2rem;
@@ -18,6 +30,7 @@
     </style>
   </head>
   <body>
+    <div class="cover">Click/Tap to start</div>
     <main>
       <button onclick="playSound('peter-laugh')">Peter</button>
       <button onclick="playSound('quagmire-giggity')">Quagmire giggity</button>
@@ -27,10 +40,17 @@
     <script src="/socket.io/socket.io.js"></script>
 
     <script>
+      const coverElement = document.querySelector(".cover");
+      let isCoverRemoved = false;
+      coverElement.addEventListener("click", () => {
+        if (isCoverRemoved) return;
+        coverElement.style.display = "none";
+        isCoverRemoved = true;
+      });
       const socket = io();
       let globalSoundName;
       let mainAudio;
-      alert("Sounds with friends, ready?");
+
       function playSound(soundName) {
         globalSoundName = soundName;
         console.log({ soundName });
