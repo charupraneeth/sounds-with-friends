@@ -51,7 +51,7 @@
       let globalSoundName;
       let mainAudio;
 
-      function playSound(soundName) {
+      function playSound(soundName, shouldNotEmit = false) {
         globalSoundName = soundName;
         console.log({ soundName });
         if (mainAudio) {
@@ -59,11 +59,12 @@
         }
         mainAudio = new Audio(`${soundName}.mp3`);
         mainAudio.play();
-        socket.emit("play sound", soundName);
+
+        if (!shouldNotEmit) socket.emit("play sound", soundName);
       }
 
       socket.on("play sound", function (songName) {
-        playSound(songName);
+        playSound(songName, true);
       });
     </script>
   </body>
