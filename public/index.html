@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sounds with friends</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      main {
+        margin: 1rem;
+      }
+      button {
+        padding: 2rem;
+        margin-right: 1rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <button onclick="playSound('peter-laugh')">Peter</button>
+      <button onclick="playSound('quagmire-giggity')">Quagmire giggity</button>
+      <button onclick="playSound('quagmire')">Quagmire</button>
+      <button onclick="playSound('windows-error')">Windows error</button>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      const socket = io();
+      let globalSoundName;
+      let mainAudio;
+      function playSound(soundName) {
+        globalSoundName = soundName;
+        console.log({ soundName });
+        if (mainAudio) {
+          mainAudio.pause();
+        }
+        mainAudio = new Audio(`${soundName}.mp3`);
+        mainAudio.play();
+        socket.emit("play sound", soundName);
+      }
+
+      socket.on("play sound", function (songName) {
+        if (songName !== globalSoundName) playSound(songName);
+      });
+    </script>
+  </body>
+</html>
